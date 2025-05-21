@@ -5,7 +5,7 @@ using Template.Core.StaticClasses;
 namespace Template.Data.Seed;
 public static class UserSeeder
 {
-    public static async Task SeedAsync(ApplicationDbContext context)
+    public static async Task SeedAsync(AppDbContext context)
     {
         if (context.Users.Any())
         {

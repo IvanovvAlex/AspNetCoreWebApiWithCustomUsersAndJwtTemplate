@@ -10,7 +10,7 @@ public static class DbInitializer
         IServiceScopeFactory scopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();
         using IServiceScope scope = scopeFactory.CreateScope();
 
-        ApplicationDbContext db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        AppDbContext db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
         await UserSeeder.SeedAsync(db);
     }
