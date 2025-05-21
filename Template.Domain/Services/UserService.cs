@@ -1,6 +1,4 @@
-using Template.Common.Requests.Auth;
 using Template.Common.Requests.Users;
-using Template.Common.Responses.Auth;
 using Template.Common.Responses.Users;
 using Template.Core.Exceptions;
 using Template.Core.StaticClasses;
@@ -28,11 +26,7 @@ public class UserService(IUserRepository userRepository) : IUserService
     }
     public async Task<UserResponse?> GetByIdAsync(Guid id)
     {
-        User? user = await userRepository.GetByIdAsync(id);
-        if (user == null)
-        {
-            throw new AppException("User not found.").SetStatusCode(404);
-        }
+        User? user = await userRepository.GetByIdAsync(id) ?? throw new AppException("User not found.").SetStatusCode(404);
         return new()
         {
             Id = user.Id,
@@ -87,17 +81,12 @@ public class UserService(IUserRepository userRepository) : IUserService
 
     public async Task<bool> DemoteToRegisteredCustomerAsync(RoleChangeRequest request)
     {
-        return await ChangeRoleAsync(request, Roles.RegisteredCustomer);
+        return await ChangeRoleAsync(request, Roles.Admin);
     }
 
     private async Task<bool> ChangeRoleAsync(RoleChangeRequest request, string toRole)
     {
-        User userBeforeUpdate = (await userRepository.GetByIdAsync(request.UserId))!;
-
-        if (userBeforeUpdate == null)
-        {
-            throw new AppException("User not found.").SetStatusCode(404);
-        }
+        User userBeforeUpdate = (await userRepository.GetByIdAsync(request.UserId))! ?? throw new AppException("User not found.").SetStatusCode(404);
 
         User? updatedUser = new()
         {

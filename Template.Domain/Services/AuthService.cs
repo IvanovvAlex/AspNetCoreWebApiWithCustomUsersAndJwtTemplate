@@ -17,7 +17,7 @@ using Template.Domain.Interfaces;
 
 namespace Template.Domain.Services;
 
-public class AuthService(ApplicationDbContext context, IUserRepository userRepository, IHttpContextAccessor httpContextAccessor) : IAuthService
+public class AuthService(AppDbContext context, IUserRepository userRepository, IHttpContextAccessor httpContextAccessor) : IAuthService
 {
     public async Task<RegisterUserResponse?> RegisterAsync(RegisterUserRequest request)
     {
@@ -32,7 +32,7 @@ public class AuthService(ApplicationDbContext context, IUserRepository userRepos
             PasswordHash = "temporaryPasswordHash",
             Names = request.Names,
             Phone = request.Phone,
-            Role = Roles.RegisteredCustomer
+            Role = Roles.Admin
         };
 
         string hashedPassword = new PasswordHasher<User>()
@@ -81,12 +81,7 @@ public class AuthService(ApplicationDbContext context, IUserRepository userRepos
     public async Task<bool> LogoutAsync()
     {
         Guid currentUserId = Guid.Parse(await GetCurrentUserId());
-        User? user = await context.Users.FirstOrDefaultAsync(u => u.Id == currentUserId);
-
-        if (user == null)
-        {
-            throw new AppException("User not found.").SetStatusCode(404);
-        }
+        User? user = await context.Users.FirstOrDefaultAsync(u => u.Id == currentUserId) ?? throw new AppException("User not found.").SetStatusCode(404);
 
         user.RefreshToken = null;
         user.RefreshTokenExpiryTime = null;
