@@ -1,10 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <ItemGroup>
+
+  <ItemGroup> 
     <ProjectReference Include="..\Template.Core\Template.Core.csproj" />
     <ProjectReference Include="..\Template.Data\Template.Data.csproj" />
     <ProjectReference Include="..\Template.Common\Template.Common.csproj" />
   </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
   </ItemGroup>
+
 </Project>
